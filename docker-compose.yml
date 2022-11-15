@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  alticci-service:
+    depends_on:
+      - redis-service
+    image: 'ghcr.io/eduaugustoo/alticci-service:latest'
+    container_name: alticci-service
+    ports: 
+      - 8080:8080
+
+  redis-service:
+    image: 'redis:7.0'
+    container_name: 'redis-service'
+    ports:
+      - 6379:6379

@@ -26,6 +26,6 @@ public class AlticciServiceImpl implements AlticciService {
                 return ALTICCI_TWO;
         }
 
-        return null;
+        return calculateAlticciValue(num - 3) + calculateAlticciValue(num - 2);
     }
 }
