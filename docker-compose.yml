@@ -7,9 +7,21 @@ services:
     container_name: alticci-service
     ports: 
       - 8080:8080
+    networks:
+      backend:
+        aliases:
+          - 'alticci-service'
 
   redis-service:
     image: 'redis:7.0'
     container_name: 'redis-service'
     ports:
       - 6379:6379
+    networks:
+      backend:
+        aliases:
+          - 'redis-service'
+
+networks:
+  backend:
+    driver: bridge

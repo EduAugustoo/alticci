@@ -1,23 +1,27 @@
 package com.eduardo.alticci.services.impl;
 
+import com.eduardo.alticci.errors.BusinessException;
 import com.eduardo.alticci.services.AlticciService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-@Slf4j
+import java.math.BigInteger;
+
 @Service
 public class AlticciServiceImpl implements AlticciService {
 
-    private static final Integer ALTICCI_ZERO = 0;
-    private static final Integer ALTICCI_ONE = 1;
-    private static final Integer ALTICCI_TWO = 1;
+    private static final BigInteger ALTICCI_ZERO = BigInteger.ZERO;
+    private static final BigInteger ALTICCI_ONE = BigInteger.ONE;
+    private static final BigInteger ALTICCI_TWO = BigInteger.ONE;
 
     @Cacheable("valuesCache")
     @Override
-    public Integer calculateAlticciValue(Integer num) {
-        log.info("Sem cache!!");
-        switch (num) {
+    public BigInteger calculateAlticciValue(Integer number) {
+        if (number < 0) {
+            throw new BusinessException("Negative numbers are not allowed!");
+        }
+
+        switch (number) {
             case 0:
                 return ALTICCI_ZERO;
             case 1:
@@ -26,6 +30,18 @@ public class AlticciServiceImpl implements AlticciService {
                 return ALTICCI_TWO;
         }
 
-        return calculateAlticciValue(num - 3) + calculateAlticciValue(num - 2);
+        BigInteger first = ALTICCI_ZERO;
+        BigInteger second = ALTICCI_ONE;
+        BigInteger third = ALTICCI_TWO;
+        BigInteger nth = BigInteger.ZERO;
+
+        for (int i = 3; i <= number; i++) {
+            nth = first.add(second);
+            first = second;
+            second = third;
+            third = nth;
+        }
+
+        return nth;
     }
 }
